@@ -41,9 +41,9 @@ const getLatestNews = async () => {
 };
 
 const render = () => {
-  for (i = 0; i < newsList.length; i++) {
-    console.log("news", i, newsList[i].title, newsList[i].description);
-  }
+  // for (i = 0; i < newsList.length; i++) {
+  //   console.log("news", i, newsList[i].title, newsList[i].description);
+  // }
 
   const newsHTML = newsList
     .map(

@@ -1,50 +1,48 @@
 const API_KEY = `a770d1855a244811978ee7f9c6834ef8`;
-let category = "general";
 let newsList = [];
+// let category = "general";
+// let searchInput = document.getElementById("search-input");
+let searchButton = document.getElementById("search-button");
+const menus = document.querySelectorAll(".menus button");
+menus.forEach(menu=>menu.addEventListener("click",(event)=>getNewsByCategory(event)))
 
-let sportsButton = document.getElementById("sports-button");
-let scienceButton = document.getElementById("science-button");
-let businessButton = document.getElementById("business-button");
-let entertainmentButton = document.getElementById("entertainment-button");
-let technologyButton = document.getElementById("technology-button");
 
-sportsButton.addEventListener("click", function () {
-  category = "sports";
-  getLatestNews();
-});
-scienceButton.addEventListener("click", function () {
-  category = "science";
-  getLatestNews();
-});
-businessButton.addEventListener("click", function () {
-  category = "business";
-  getLatestNews();
-});
-entertainmentButton.addEventListener("click", function () {
-  category = "entertainment";
-  getLatestNews();
-});
-technologyButton.addEventListener("click", function () {
-  category = "technology";
-  getLatestNews();
-});
+const getLatestNews = () => {
+  const url = new URL(
+    `https://newsapi.org/v2/top-headlines?country=kr&apiKey=${API_KEY}`
+  );
+  showNews(url);
+};
 
-const getLatestNews = async () => {
+const getNewsByCategory= (event) => {
+  const category = event.target.textContent.toLowerCase(); //버튼의 값을 category 변수에 저장
+  console.log("category", category);
   const url = new URL(
     `https://newsapi.org/v2/top-headlines?country=kr&category=${category}&apiKey=${API_KEY}`
   );
-  const response = await fetch(url);
-  const data = await response.json(); //json->파일 형식(png,jpg 등처럼)
+  showNews(url);
+};
+
+const getNewsByKeyword = () => {
+  keyword = document.getElementById("search-input").value;
+  const url = new URL(
+    `https://newsapi.org/v2/top-headlines?country=kr&q=${keyword}&apiKey=${API_KEY}`
+  )
+  showNews(url);
+}
+
+const showNews = async (url) => {
+  const response  = await fetch(url);
+  const data = await response.json();
   newsList = data.articles;
   console.log(newsList);
-  render();
-};
+  render(); 
+}
 
 const render = () => {
   // for (i = 0; i < newsList.length; i++) {
   //   console.log("news", i, newsList[i].title, newsList[i].description);
   // }
-
   const newsHTML = newsList
     .map(
       (news) => `<div class="row news">    
@@ -66,9 +64,17 @@ const render = () => {
         </div>`
     )
     .join("");
-
   document.getElementById("news-board").innerHTML = newsHTML;
 };
+
+
+// searchButton.addEventListener("click",searchNews);
+searchButton.addEventListener("click",function(){
+    searchInput.value=""
+});
+
+getLatestNews();
+
 
 // function render() {
 //     console.log("asdf")
@@ -96,6 +102,5 @@ const render = () => {
 // //     document.getElementById("news-board").innerHTML = resultHTML;
 // }
 
-getLatestNews();
 
 //title, author

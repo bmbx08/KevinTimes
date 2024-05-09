@@ -1,3 +1,14 @@
+.input-area{
+    margin-top: 1em;
+}
+
+.input-form{
+    font-size: 1.5vw;
+    margin-left: 5px;
+    margin-right:5px;
+    text-align:center;
+}
+
 .head-line{
     margin-top: 1em;
     display:flex; /* 부모에 flex를 적용해야 자식의 위치를 이동하기 편하다 */

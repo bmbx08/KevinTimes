@@ -13,7 +13,11 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <section class="container"> 
+    <section class="container">
+      <div class="input-area">
+        🔍<input type="text" id="search-input" class="input-form" placeholder="뉴스 검색"/>
+        <button id="search-button" onclick="getNewsByKeyword()">검색</button>
+      </div> 
       <section> <!--타이틀, 메뉴-->
         <div class="head-line">
           <svg viewBox="0 0 184 25" fill="#000" aria-hidden="true">
@@ -23,21 +27,13 @@
           </svg>
         </div>
         <div class="menus">
-            <button id="sports-button">Sport</button>
-            <button id="technology-button">Tech</button>
-            <button>World</button>
-            <button>Finance</button>
-            <button>Politics</button>
+            <button id="sports-button">Sports</button>
+            <button id="technology-button">Technology</button>
             <button id="business-button">Business</button>
-            <button>Economics</button>
             <button id="entertainment-button">Entertainment</button>
-            <button>Beauty</button>
-            <button>Travel</button>
-            <button>Music</button>
-            <button>Food</button>
             <button id="science-button">Science</button>
-            <button>Gaming</button>
-            <button>Energy</button>
+            <button id="general-button">General</button>
+            <button id="health-button">Health</button>
         </div>
       </section>
       <section id="news-board"> <!--뉴스 보여주는 곳-->

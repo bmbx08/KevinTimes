@@ -37,6 +37,11 @@
     background-color: lightgray;
 }
 
+.alert{
+    display:flex;
+    justify-content: center;
+}
+
 .news-img-size{
     max-width: 100%;
     max-height: 250px;

@@ -13,7 +13,7 @@ const getLatestNews = () => {
   url = new URL(
     `https://newsapi.org/v2/top-headlines?country=kr&apiKey=${API_KEY}`
   );
-  showNews();
+  getNews();
 };
 
 const getNewsByCategory = (event) => {
@@ -22,40 +22,64 @@ const getNewsByCategory = (event) => {
   url = new URL(
     `https://newsapi.org/v2/top-headlines?country=kr&category=${category}&apiKey=${API_KEY}`
   );
-  showNews();
+  getNews();
 };
 
 const getNewsByKeyword = async () => {
   keyword = document.getElementById("search-input").value;
   url = new URL(
     `https://newsapi.org/v2/top-headlines?country=kr&q=${keyword}&apiKey=${API_KEY}`
-  )
-  const response = await fetch(url);
-  const data = await response.json();
-  newsList = data.articles;
-  console.log(newsList);
-  render();
-  try {
-    if (newsList == 0) {
-      throw new Error("검색 결과 없음!");
-    }
-  } catch (error) {
-    let resultHTML = 
-      `<div class="alert alert-danger" role="alert">
-      ${error.message}
-      </div>`;
-    document.getElementById("news-board").innerHTML = resultHTML;
-  };
+  );
+  getNews();
+  // const response = await fetch(url);
+  // const data = await response.json();
+  // newsList = data.articles;
+  // console.log(newsList);
+  // render();
+  // try {
+  //   if (newsList == 0) {
+  //     throw new Error("검색 결과 없음!");
+  //   }
+  // } catch (error) {
+  //   let resultHTML = 
+  //     `<div class="alert alert-danger" role="alert">
+  //     ${error.message}
+  //     </div>`;
+  //   document.getElementById("news-board").innerHTML = resultHTML;
+  // };
 };
 
 
 
-  const showNews = async () => {
-    const response = await fetch(url);
-    const data = await response.json();
-    newsList = data.articles;
-    console.log(newsList);
-    render();
+  const getNews = async () => {
+    try{
+      const response = await fetch(url);
+      console.log("response:", response.status);
+      const data = await response.json();
+      if(response.status === 200){
+        if(data.totalResults === 0){
+          throw new Error("검색 결과 없음!");
+        } 
+        newsList = data.articles;
+        console.log("ddd", data);
+        console.log("news", newsList);
+        render();
+      } else{
+        throw new Error(data.message);
+      }
+      
+    }catch(error){
+      errorRender(error.message);
+      
+      // if (newsList==0){
+      //   let resultHTML = 
+      //   `<div class="alert alert-danger" role="alert">
+      //   ${error.message}
+      //   </div>`;
+      //   document.getElementById("news-board").innerHTML = resultHTML;
+      // }
+    }
+    
   }
 
   const render = () => {
@@ -85,6 +109,13 @@ const getNewsByKeyword = async () => {
     document.getElementById("news-board").innerHTML = newsHTML;
   };
 
+  const errorRender = (errorMessage) => {
+    const errorHTML = 
+      `<div class="alert alert-danger" role="alert">
+      ${errorMessage}
+      </div>`;
+      document.getElementById("news-board").innerHTML = errorHTML;
+  }
 
   // searchButton.addEventListener("click",searchNews);
   searchButton.addEventListener("click", function () {

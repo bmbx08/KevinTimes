@@ -7,7 +7,10 @@ const menus = document.querySelectorAll(".menus button");
 menus.forEach(menu => menu.addEventListener("click", (event) => getNewsByCategory(event)));
 let url = new URL(`https://newsapi.org/v2/top-headlines?country=kr&apiKey=${API_KEY}`);
 
-
+let totalResults = 0;
+let page = 1;
+const pageSize = 10;
+const groupSize = 5;
 
 const getLatestNews = () => {
   url = new URL(
@@ -53,6 +56,8 @@ const getNewsByKeyword = async () => {
 
   const getNews = async () => {
     try{
+      url.searchParams.set("page",page); // => &page=page
+      url.searchParams.set("pageSize",pageSize);
       const response = await fetch(url);
       console.log("response:", response.status);
       const data = await response.json();
@@ -61,9 +66,11 @@ const getNewsByKeyword = async () => {
           throw new Error("검색 결과 없음!");
         } 
         newsList = data.articles;
+        totalResults = data.totalResults
         console.log("ddd", data);
         console.log("news", newsList);
         render();
+        paginationRender();
       } else{
         throw new Error(data.message);
       }
@@ -122,8 +129,75 @@ const getNewsByKeyword = async () => {
     searchInput.value = ""
   });
 
-  getLatestNews();
+  const paginationRender=()=>{
+    // totalResult
+    // page
+    // pageSize
+    // groupSize
+    // totalpages
+    const totalPages = Math.ceil(totalResults/pageSize)
+    // pageGroup
+    const pageGroup = Math.ceil(page/groupSize);
+    // lastPage
+    let lastPage= pageGroup * groupSize;
+    console.log(lastPage)
+    // 마지막 페이지그룹이 그룹사이즈보다 작으면, lastPage=totalPage
+    if(lastPage>totalPages){
+      lastPage=totalPages;
+    }
+    console.log(lastPage)
+    // firstPage
+    const firstPage= lastPage - (groupSize-1)<=0? 1: lastPage - (groupSize-1);
 
+    let paginationHTML = ``
+
+    console.log(lastPage,firstPage);
+    
+    paginationHTML+=`<li class="page-item" onclick="prevPage(${firstPage})"><a class="page-link" href="#"><</a></li>`
+    for(let i=firstPage;i<=lastPage;i++){
+      paginationHTML+=`<li class="page-item ${
+        i===page? "active":""
+      }" onclick="moveToPage(${i})"><a class="page-link" href="#">${i}</a></li>`
+    }
+    paginationHTML+=`<li class="page-item" onclick="nextPage(${lastPage})"><a class="page-link" href="#">></a></li>`
+
+    document.querySelector(".pagination").innerHTML = paginationHTML
+
+    // <nav aria-label="Page navigation example">
+    //   <ul class="pagination">
+    //     <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+    //     <li class="page-item"><a class="page-link" href="#">1</a></li>
+    //     <li class="page-item"><a class="page-link" href="#">2</a></li>
+    //     <li class="page-item"><a class="page-link" href="#">3</a></li>
+    //     <li class="page-item"><a class="page-link" href="#">4</a></li>
+    //     <li class="page-item"><a class="page-link" href="#">5</a></li>
+    //     <li class="page-item"><a class="page-link" href="#">Next</a></li>
+    //   </ul>
+    // </nav>
+  }
+
+  const moveToPage=(pageNum)=>{
+    console.log("movetopage",pageNum);
+    page=pageNum;
+    getNews();
+  }
+
+  const prevPage = (firstPage) => {
+    if(page>firstPage){
+      page-=1;
+      getNews();
+    }
+  }
+
+  const nextPage = (lastPage) => {
+    if(page<lastPage){
+      page+=1;
+      getNews();
+    }
+  }
+
+  getLatestNews();
+  
 
 // function render() {
 //     console.log("asdf")

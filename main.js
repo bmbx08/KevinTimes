@@ -4,7 +4,10 @@ let newsList = [];
 let searchInput = document.getElementById("search-input");
 let searchButton = document.getElementById("search-button");
 const menus = document.querySelectorAll(".menus button");
+const hotKeywords = document.querySelectorAll(".hot-keyword button");
+
 menus.forEach(menu => menu.addEventListener("click", (event) => getNewsByCategory(event)));
+hotKeywords.forEach(hKeyword => hKeyword.addEventListener("click", (event) => getNewsByHotword(event)));
 let url = new URL(`https://newsapi.org/v2/top-headlines?country=kr&apiKey=${API_KEY}`);
 
 let totalResults = 0;
@@ -51,6 +54,16 @@ const getNewsByKeyword = async () => {
   //   document.getElementById("news-board").innerHTML = resultHTML;
   // };
 };
+
+const getNewsByHotword = (event) => {
+  const hotword = event.target.textContent.toLowerCase(); 
+  console.log("hotword", hotword);
+  url = new URL(
+    `https://newsapi.org/v2/top-headlines?country=kr&q=${hotword}&apiKey=${API_KEY}`
+  );
+  getNews();
+};
+
 
 const getNews = async () => {
   try{
